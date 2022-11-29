@@ -1,2 +1,2 @@
 # newday
-everyday tasks automated on my Ubuntu 
+Everyday tasks 🌄 automated on my Ubuntu 🐆
