@@ -1,15 +1,10 @@
 # Quotes from influential Figures. Timeless Wisdom shown daily
 
 # VARIABLES
-path="/home/kira/bin/newDay"
-json="quotes.json"
+api="https://type.fit/api/quotes"
 index=$(shuf -i 0-1643 -n 1)
+quote=$(curl -s $api | jq ".[$index].text")
+author=$(curl -s $api | jq -r ".[$index].author")
 
-cd $path
-
-# Picking random Quote of the day with its Author
-quote=$(jq ".[$index].text" $json)
-author=$(jq -r ".[$index].author" $json)
-
-# Displaying Quote of the day and its Author
+#Displaying Quote with its Author...
 echo -e "$quote \n -$author" | lolcat
