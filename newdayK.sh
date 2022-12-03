@@ -11,7 +11,7 @@ sudo apt-get update && sudo apt-get upgrade
 
 # Opening Aliases' customization/configuration file
 cd /home/kira
-code .bash_aliases
+code .bash_aliases/.aliases
 
 # Final Messages/Reminders
 echo -e "Everything is up to date now \n You are ready to go!" | lolcat
