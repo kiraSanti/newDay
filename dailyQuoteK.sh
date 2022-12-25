@@ -10,7 +10,7 @@ quoteRemote=$(curl -s $api | jq ".[$index].text") #Picking random quote
 authorRemote=$(curl -s $api | jq -r ".[$index].author") #Picking random author
 
 #LOCAL VARIABLES
-json="/home/kira/bin/newDay/quotes.json"
+json="/home/$USER/bin/newDay/quotes.json"
 quoteLocal=$(jq ".[$index].text" $json)
 authorLocal=$(jq -r ".[$index].author" $json)
 
