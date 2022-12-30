@@ -22,10 +22,10 @@ auLoc=$(jq -r ".[$index].author" $qtsLoc) #Picking random Local author
 
 
 # Checking if author is 'null' and setting it as 'anonymous' instead
-if [ "$authorRemote" = "null" ]  || [ "$authorLocal" = "null" ]
+if [ "$auRem" = "null" ]  || [ "$auLoc" = "null" ]
 then
-        authorRemote="anonymous"
-	authorLocal="anonymous"
+        auRem="anonymous"
+	auLoc="anonymous"
 fi
 
 
@@ -36,8 +36,9 @@ if [ $len -lt 1643 ] # @thisLine3
 then
         until [ $ocurrences -eq 0 ] # Until the previously generated $index is not on the $indices array 
 				    # (meaning the quote which belongs to that $index has not been displayed yet)
-				    # it will keep generating new $index and updating quote and author (Remote/Local)
-				    # when done ( i.e when $index is not found the $indices array) it'll jump to @thisLine1
+				    # it will keep: Generating new $index, Updating quote and author (Remote/Local) and
+				    # Checking if author is 'null' and setting it as 'anonymous' instead.	
+				    # When done ( i.e when $index is not found the $indices array) it'll jump to @thisLine1
         do
                 index=$(shuf -i 0-1642 -n 1)
 		ocurrences=$(jq "[.array[] | select(. == $index)] | length" $indices)
@@ -45,6 +46,12 @@ then
 		auLoc=$(jq -r ".[$index].author" $qtsLoc)
 		qtRem=$(curl -s $qtsRem | jq ".[$index].text")
 		auRem=$(curl -s $qtsRem | jq -r ".[$index].author")
+		
+		if [ "$auRem" = "null" ]  || [ "$auLoc" = "null" ]
+		then
+        		auRem="anonymous"
+        		auLoc="anonymous"
+		fi
         done
 
 	if [ $httpCode -eq 200 ] # @thisLine1... from here it checks whether "https://type.fit/api/quotes" can be reached or not...
