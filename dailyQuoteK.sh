@@ -9,10 +9,19 @@ api="https://type.fit/api/quotes"
 quoteRemote=$(curl -s $api | jq ".[$index].text") #Picking random quote
 authorRemote=$(curl -s $api | jq -r ".[$index].author") #Picking random author
 
+
 #LOCAL VARIABLES
 json="/home/kira/bin/newDay/quotes.json"
 quoteLocal=$(jq ".[$index].text" $json)
 authorLocal=$(jq -r ".[$index].author" $json)
+
+
+# Checking if author is 'null' and setting it as 'anonymous' instead
+if [ "$authorRemote" = "null" ]  || [ "$authorLocal" = "null" ]
+then
+        authorRemote="anonymous"
+	authorLocal="anonymous"
+fi
 
 
 #DISPLAYING QUOTE OF THE DAY WITH ITS AUTHOR:
