@@ -3,7 +3,10 @@
 # GENERAL VARIABLES
 httpCode=$(curl -s -o /null -I -w "%{http_code}" https://type.fit/api/quotes) # Get http request-code only
 									      # to check if "https://type.fit/api/quotes" can be reached
-index=$(shuf -i 0-1642 -n 1) # Generate random index
+
+
+range="0-1"
+index=$(shuf -i $range -n 1) # Generate random index
 indices="/home/$USER/bin/newDay/indices.json" # Array of Indexes of Quotes already displayed
 len=$(jq "[.array[] | select(.)] | length" $indices) # Amount of Indexes on the $indices array, i.e # of Quotes already displayed
 ocurrences=$(jq "[.array[] | select(. == $index)] | length" $indices) # Amount of times a certain Quote has
@@ -21,6 +24,20 @@ qtLoc=$(jq ".[$index].text" $qtsLoc) # Picking random Local quote
 auLoc=$(jq -r ".[$index].author" $qtsLoc) #Picking random Local author
 
 
+
+if [ $len -ge 0 ] && [ $len -lt 2 ]
+then
+        range="0-1"
+fi
+
+
+if [ $len -ge 2 ] && [ $len -lt 4 ]
+then
+        range="0-3"
+fi
+
+
+
 # Checking if author is 'null' and setting it as 'anonymous' instead
 if [ "$auRem" = "null" ]  || [ "$auLoc" = "null" ]
 then
@@ -32,7 +49,7 @@ fi
 #DISPLAYING QUOTE OF THE DAY WITH ITS AUTHOR:
 # Making sure quote and author (Remote/Local) have not been displayed before...
 
-if [ $len -lt 1643 ] # @thisLine3 
+if [ $len -lt 4 ] # @thisLine3 
 then
         until [ $ocurrences -eq 0 ] # Until the previously generated $index is not on the $indices array 
 				    # (meaning the quote which belongs to that $index has not been displayed yet)
@@ -40,7 +57,7 @@ then
 				    # Checking if author is 'null' and setting it as 'anonymous' instead.	
 				    # When done ( i.e when $index is not found the $indices array) it'll jump to @thisLine1
         do
-                index=$(shuf -i 0-1642 -n 1)
+                index=$(shuf -i $range -n 1)
 		ocurrences=$(jq "[.array[] | select(. == $index)] | length" $indices)
 		qtLoc=$(jq ".[$index].text" $qtsLoc)
 		auLoc=$(jq -r ".[$index].author" $qtsLoc)
@@ -73,7 +90,7 @@ then
 fi
 
 
-if [ $len -eq 1643 ] # @thisLine2... given $indices array is filled up, now it'll:
+if [ $len -eq 4 ] # @thisLine2... given $indices array is filled up, now it'll:
 
 		     # Display the quote and author (Remote/Local) associated with the $index generated at the beginning of the script
 		     # Make $indices empty and then add the $index generated at the beginning of the script to the $indices array
