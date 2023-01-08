@@ -4,8 +4,17 @@
 httpCode=$(curl -s -o /null -I -w "%{http_code}" https://type.fit/api/quotes) # Get http request-code only
 									      # to check if "https://type.fit/api/quotes" can be reached
 
-
-range="0-1"
+setJson="/home/$USER/bin/newDay/set.json"
+delta=$(jq ".array[0]" $setJson)
+if [ $delta -gt 1 ]
+then
+        preSet="{ \"array\": [0] }"
+        echo $preSet > $setJson
+	#delta=$(jq ".array[0]" $setJson)
+	delta=0
+fi
+ranges="/home/$USER/bin/newDay/ranges.json"
+range=$(jq -r ".array[$delta]" $ranges)
 index=$(shuf -i $range -n 1) # Generate random index
 indices="/home/$USER/bin/newDay/indices.json" # Array of Indexes of Quotes already displayed
 len=$(jq "[.array[] | select(.)] | length" $indices) # Amount of Indexes on the $indices array, i.e # of Quotes already displayed
@@ -25,16 +34,55 @@ auLoc=$(jq -r ".[$index].author" $qtsLoc) #Picking random Local author
 
 
 
-if [ $len -ge 0 ] && [ $len -lt 2 ]
-then
-        range="0-1"
+
+
+
+
+if [ $len -eq 5 ]
+then	
+	if [ $delta -eq 1 ]
+	then
+        	preSet="{ \"array\": [0] }"
+	        echo $preSet > $setJson
+        	delta=0
+	else
+		delta=$(( delta+1 ))		
+	fi
+
+	range=$(jq -r ".array[$delta]" $ranges)
+	index=$(shuf -i $range -n 1)	
+	qtRem=$(curl -s $qtsRem | jq ".[$index].text")
+	auRem=$(curl -s $qtsRem | jq -r ".[$index].author")
+
+
+	echo -e "$index: $qtRem \n -$auRem" | lolcat
+
+	newindices="{ \"array\": [$index] }"
+	echo $newindices > $indices
+
+        preSet="{ \"array\": [$delta] }"
+        echo $preSet > $setJson	
 fi
 
 
-if [ $len -ge 2 ] && [ $len -lt 4 ]
-then
-        range="0-3"
-fi
+
+
+
+
+
+
+
+
+echo $range
+
+
+
+
+
+
+
+
+
 
 
 
@@ -49,7 +97,7 @@ fi
 #DISPLAYING QUOTE OF THE DAY WITH ITS AUTHOR:
 # Making sure quote and author (Remote/Local) have not been displayed before...
 
-if [ $len -lt 4 ] # @thisLine3 
+if [ $len -lt 5 ] # @thisLine3 
 then
         until [ $ocurrences -eq 0 ] # Until the previously generated $index is not on the $indices array 
 				    # (meaning the quote which belongs to that $index has not been displayed yet)
@@ -77,7 +125,8 @@ then
         	echo -e "$index: $qtRem \n -$auRem" | lolcat
 	else
         	echo -e "$index: $qtLoc \n -$auLoc" | lolcat
-	fi
+
+	fi	
 	
 	newindices=$(jq ".array += [$index]" $indices) # Once quote and author (Remote/Local) are displayed...
 						       # $indices array gets updated with the last $index generated,
@@ -90,7 +139,7 @@ then
 fi
 
 
-if [ $len -eq 4 ] # @thisLine2... given $indices array is filled up, now it'll:
+if [ $len -eq 999 ] # @thisLine2... given $indices array is filled up, now it'll:
 
 		     # Display the quote and author (Remote/Local) associated with the $index generated at the beginning of the script
 		     # Make $indices empty and then add the $index generated at the beginning of the script to the $indices array
