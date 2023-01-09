@@ -4,15 +4,10 @@
 httpCode=$(curl -s -o /null -I -w "%{http_code}" https://type.fit/api/quotes) # Get http request-code only
 									      # to check if "https://type.fit/api/quotes" can be reached
 
-setJson="/home/$USER/bin/newDay/set.json"
+setJson="/home/$USER/bin/newDay/seT.json"
 delta=$(jq ".array[0]" $setJson)
-if [ $delta -gt 1 ]
-then
-        preSet="{ \"array\": [0] }"
-        echo $preSet > $setJson
-	#delta=$(jq ".array[0]" $setJson)
-	delta=0
-fi
+
+
 ranges="/home/$USER/bin/newDay/ranges.json"
 range=$(jq -r ".array[$delta]" $ranges)
 index=$(shuf -i $range -n 1) # Generate random index
@@ -38,7 +33,7 @@ auLoc=$(jq -r ".[$index].author" $qtsLoc) #Picking random Local author
 
 
 
-if [ $len -eq 5 ]
+if [ $len -eq 50 ]
 then	
 	if [ $delta -eq 1 ]
 	then
@@ -97,7 +92,7 @@ fi
 #DISPLAYING QUOTE OF THE DAY WITH ITS AUTHOR:
 # Making sure quote and author (Remote/Local) have not been displayed before...
 
-if [ $len -lt 5 ] # @thisLine3 
+if [ $len -lt 50 ] # @thisLine3 
 then
         until [ $ocurrences -eq 0 ] # Until the previously generated $index is not on the $indices array 
 				    # (meaning the quote which belongs to that $index has not been displayed yet)
