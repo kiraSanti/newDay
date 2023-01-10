@@ -30,20 +30,20 @@ auLoc=$(jq -r ".[$index].author" $qtsLoc) #Picking random Local author
 
 
 
+if [ $len -eq 43 ] && [ $delta -eq 32 ]
+then
+       	delta=0
+	range=$(jq -r ".array[$delta]" $ranges)
+        newindices="{ \"array\": [] }"
+        echo $newindices > $indices
 
-
+	preSet="{ \"array\": [0] }"
+        echo $preSet > $setJson			
+fi
 
 if [ $len -eq 50 ]
-then	
-	if [ $delta -eq 1 ]
-	then
-        	preSet="{ \"array\": [0] }"
-	        echo $preSet > $setJson
-        	delta=0
-	else
-		delta=$(( delta+1 ))		
-	fi
-
+then
+	delta=$(( delta+1 ))	
 	range=$(jq -r ".array[$delta]" $ranges)
 	index=$(shuf -i $range -n 1)	
 	qtRem=$(curl -s $qtsRem | jq ".[$index].text")
@@ -58,6 +58,11 @@ then
         preSet="{ \"array\": [$delta] }"
         echo $preSet > $setJson	
 fi
+
+
+
+
+
 
 
 
