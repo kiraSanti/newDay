@@ -8,7 +8,7 @@ setJson="/home/$USER/bin/newDay/seT.json"
 delta=$(jq ".array[0]" $setJson)
 
 
-ranges="/home/$USER/bin/newDay/ranges.json"
+ranges="/home/$USER/bin/newDay/ranges2.json"
 range=$(jq -r ".array[$delta]" $ranges)
 index=$(shuf -i $range -n 1) # Generate random index
 indices="/home/$USER/bin/newDay/indices.json" # Array of Indexes of Quotes already displayed
@@ -30,7 +30,7 @@ auLoc=$(jq -r ".[$index].author" $qtsLoc) #Picking random Local author
 
 
 
-if [ $len -eq 43 ] && [ $delta -eq 32 ]
+if [ $len -eq 8 ] && [ $delta -eq 109 ]
 then
        	delta=0
 	range=$(jq -r ".array[$delta]" $ranges)
@@ -41,7 +41,7 @@ then
         echo $preSet > $setJson			
 fi
 
-if [ $len -eq 50 ]
+if [ $len -eq 15 ]
 then
 	delta=$(( delta+1 ))	
 	range=$(jq -r ".array[$delta]" $ranges)
@@ -97,7 +97,7 @@ fi
 #DISPLAYING QUOTE OF THE DAY WITH ITS AUTHOR:
 # Making sure quote and author (Remote/Local) have not been displayed before...
 
-if [ $len -lt 50 ] # @thisLine3 
+if [ $len -lt 15 ] # @thisLine3 
 then
         until [ $ocurrences -eq 0 ] # Until the previously generated $index is not on the $indices array 
 				    # (meaning the quote which belongs to that $index has not been displayed yet)
