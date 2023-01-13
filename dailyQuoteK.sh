@@ -59,32 +59,7 @@ then
         echo $preSet > $setJson	
 fi
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 echo $range
-
-
-
-
-
-
-
-
-
-
-
 
 # Checking if author is 'null' and setting it as 'anonymous' instead
 if [ "$auRem" = "null" ]  || [ "$auLoc" = "null" ]

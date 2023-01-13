@@ -1,81 +1,92 @@
-: '
-a=1
-b=1
+# Quotes from influential Figures. Timeless Wisdom shown daily...
+
+# GENERAL VARIABLES
+httpCode=$(curl -s -o /null -I -w "%{http_code}" https://type.fit/api/quotes) # Get http request-code only
+                                                                              # to check if "https://type.fit/api/quotes" can be reached
 
 
-if [ $a -eq 1 ] && [ $b -eq 1 ]
+indices="/home/$USER/bin/newDay/indices.json" # Indices of quotes already displayed
+numbers="/home/$USER/bin/newDay/numbers.json" # Indices of quotes no displayed yet
+len=$(jq "[.array[] | select(.)] | length" $numbers)
+
+
+echo $len
+
+
+if [ $len -eq 0 ]
 then
-	echo yupi!
+	go=0
+	
+	while [ $go -lt 1643 ] 
+	do
+		echo $go
+		newNumbers=$(jq ".array += [$go]" $numbers)
+        	echo $newNumbers > $numbers		
+	        go=$(( go+1 ))	
+	done
+
+	jq ".array[]" $numbers > numbers.txt
+
+fi
+
+
+
+
+
+
+mapfile arr < numbers.txt
+
+index=( $(shuf -e "${arr[@]}") ) # Generate random index from numbers on numbers.txt
+
+quotes Remote
+#REMOTE VARIABLES
+qtsRem="https://type.fit/api/quotes" # Remote quotes and authors
+qtRem=$(curl -s $qtsRem | jq ".[$index].text") # Picking random Remote quote
+auRem=$(curl -s $qtsRem | jq -r ".[$index].author") # Picking random Remote author
+
+
+#LOCAL VARIABLES
+qtsLoc="/home/$USER/bin/newDay/qt.json" # Local quotes and authors
+qtLoc=$(jq ".[$index].text" $qtsLoc) # Picking random Local quote
+auLoc=$(jq -r ".[$index].author" $qtsLoc) #Picking random Local author
+
+
+
+
+# Checking if author is "null" and setting it as "anonymous" instead
+if [ "$auRem" = "null" ]  || [ "$auLoc" = "null" ]
+then
+        auRem="anonymous"
+        auLoc="anonymous"
+fi
+
+
+
+
+echo $index
+
+if [ $httpCode -eq 200 ] # @thisLine1... from here it checks whether "https://type.fit/api/quotes" can be reached or not...
+                                 # If it does it displays Remote quote and author, it displays Local quote and author otherwise
+then
+	echo -e "$qtRem \n -$auRem" | lolcat
 else
-	echo nopi :c
-fi'
-
-
-
-
-
-setJson="/home/$USER/bin/newDay/seT.json"
-delta=$(jq ".array[0]" $setJson)
-
-echo $delta
-
-preSet="{ \"array\": [0] }"
-echo $preSet > $setJson
-
-echo $delta
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-: '
-range=""
-
-
-n=1
-
-echo n=$n
-
-if [ $n == 1 ]
-then
-	range="0-2"
-fi
-
-
-if [ $n == 2 ]
-then
-	range="3-5"
+	echo -e "$qtLoc \n -$auLoc" | lolcat
 fi
 
 
 
+newNumbers=$(jq ".array -= [$index]" $numbers)
+echo $newNumbers > $numbers
 
-if [ $n == 3 ]
-then
-	range="6-8"
-fi
-
+jq ".array[]" $numbers > numbers.txt
 
 
-index=$(shuf -i $range -n 1)
+newIndices=$(jq ".array += [$index]" $indices)
+echo $newIndices > $indices
 
-echo $index'
+
+
+
+
+
 
