@@ -1,7 +1,7 @@
 n=0
 testt="test.sh"
 
-while [ $n -lt 1635 ]
+while [ $n -lt 1640 ]
 do
         echo "$n"
 	./$testt
