@@ -1,10 +1,9 @@
 n=0
-testt="test.sh"
 
 while [ $n -lt 1640 ]
 do
         echo "$n"
-	./$testt
+	./dailyQt.sh
 	n=$(( n+1 ))		
 
 	echo "___________________________________________"
