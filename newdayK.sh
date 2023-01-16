@@ -4,7 +4,7 @@
 echo "Good Morning Santi 🌄" | lolcat
 	
 # Show quote of the day
-cd dailyQuote/
+cd /home/kira/bin/newDay/dailyQuote
 ./dailyQt.sh
 
 # Upadating everything
