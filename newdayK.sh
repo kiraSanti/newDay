@@ -4,7 +4,8 @@
 echo "Good Morning Santi 🌄" | lolcat
 	
 # Show quote of the day
-dailyQuoteK.sh
+cd dailyQuote/
+./dailyQt.sh
 
 # Upadating everything
 sudo apt-get update && sudo apt-get upgrade

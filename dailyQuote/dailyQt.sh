@@ -1,16 +1,17 @@
 # Quotes from influential Figures. Timeless Wisdom shown daily...
 
+#________________________
 # GENERAL VARIABLES
 
 httpCode=$(curl -s -o /null -I -w "%{http_code}" https://type.fit/api/quotes) # Get http request-code only to check if
                                                                               # "https://type.fit/api/quotes" can be reached or not
-#httpCode=0
+
+
 notDisplayedYet="./notDisplayedYet.json" # Indices of Quotes not displayed yet
 displayed="./displayed.json" # Indices of Quotes already displayed
 len=$(jq "[.array[] | select(.)] | length" $notDisplayedYet) # Amount of Quotes not displayed yet
 
-
-
+#________________________
 # FUNCTIONS
 
 # Variables Declaration
@@ -46,7 +47,7 @@ function remloc()
         then
                 echo -e "$qtRem \n -$auRem" | lolcat
         else
-                echo -e "Local: $qtLoc \n -$auLoc" | lolcat
+                echo -e "$qtLoc \n -$auLoc" | lolcat
         fi
 }
 
@@ -104,7 +105,7 @@ function exe()
 }
 
 #________________________
+# EXECUTION
 
 exe
-
 
