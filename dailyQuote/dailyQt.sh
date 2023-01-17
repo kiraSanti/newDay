@@ -3,9 +3,12 @@
 #________________________
 # GENERAL VARIABLES
 
-httpCode=$(curl -s -o /null -I -w "%{http_code}" https://type.fit/api/quotes) # Get http request-code only to check if
-                                                                              # "https://type.fit/api/quotes" can be reached or not
+#httpCode=$(curl -s -o /null -I -w "%{http_code}" https://type.fit/api/quotes) # Get http request-code only to check if
+                                                                               # "https://type.fit/api/quotes" can be reached or not
 
+httpCode=0 # httpCode set as "0" so Quotes and Authors be consumed Locally: it is Faster 🤘
+	   # When offline, curl takes a lot (2+ sec) to get http_code in order to determine if 
+	   # Quotes and Author are condumed Remotely or Locally  		
 
 notDisplayedYet="./notDisplayedYet.json" # Indices of Quotes not displayed yet
 displayed="./displayed.json" # Indices of Quotes already displayed
